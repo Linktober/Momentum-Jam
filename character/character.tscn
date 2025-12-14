@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://dqwlfcfa1tbol"]
+[gd_scene load_steps=22 format=3 uid="uid://dqwlfcfa1tbol"]
 
 [ext_resource type="Script" uid="uid://ddj2h3tjnqy5f" path="res://character/classes/character.gd" id="1_oul6g"]
 [ext_resource type="Script" uid="uid://dodc7pappdgl2" path="res://character/classes/character_animator.gd" id="2_1l1n4"]
@@ -10,6 +10,8 @@
 [ext_resource type="Script" uid="uid://ccbgj2r3ghy1f" path="res://character/states/action/float.gd" id="5_dy06j"]
 [ext_resource type="Script" uid="uid://c7a8bmoye1aui" path="res://character/states/action/jump.gd" id="5_o6jyn"]
 [ext_resource type="Script" uid="uid://ddorebuj6vyp7" path="res://character/states/action/run_windup.gd" id="9_qkjfd"]
+[ext_resource type="Script" uid="uid://ccpx31cqeve4t" path="res://character/states/physics/run.gd" id="10_gx66j"]
+[ext_resource type="Script" uid="uid://64e26a6bvbu7" path="res://character/classes/state_link.gd" id="11_8brn5"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0xm2m"]
 size = Vector2(16, 32)
@@ -428,7 +430,7 @@ metadata/_custom_type_script = "uid://bobthsffwufj0"
 [node name="Ground" type="Node" parent="PhysicsStates"]
 script = ExtResource("4_0rvpn")
 accel = 1500.0
-max_speed = 350.0
+max_speed = 300.0
 friction_linear = 1000.0
 friction_decay = 0.5
 air_name = "Air"
@@ -445,9 +447,30 @@ press_buffer = 0.2
 allow_priority_override = true
 metadata/_custom_type_script = "uid://c7a8bmoye1aui"
 
-[node name="RunWindup" type="Node" parent="PhysicsStates/Ground"]
+[node name="RunWindup" type="Node" parent="PhysicsStates/Ground" node_paths=PackedStringArray("run_physics")]
 script = ExtResource("9_qkjfd")
+start_speed = 350.0
+run_physics = NodePath("../../Run")
+windup_duration = 0.3
+max_release_time = 0.1
 metadata/_custom_type_script = "uid://ddorebuj6vyp7"
+
+[node name="Run" type="Node" parent="PhysicsStates"]
+script = ExtResource("10_gx66j")
+ground_name = "Ground"
+stop_buffer = 0.1
+accel = 1750.0
+max_speed = 500.0
+friction_linear = 1000.0
+friction_decay = 0.5
+air_name = "Air"
+animation = "idle"
+metadata/_custom_type_script = "uid://djxg21q4acmle"
+
+[node name="JumpLink" type="Node" parent="PhysicsStates/Run" node_paths=PackedStringArray("link_to")]
+script = ExtResource("11_8brn5")
+link_to = NodePath("../../Ground/Jump")
+metadata/_custom_type_script = "uid://64e26a6bvbu7"
 
 [node name="DebugLabels" type="VBoxContainer" parent="."]
 offset_top = -64.0

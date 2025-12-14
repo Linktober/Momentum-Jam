@@ -2,40 +2,23 @@ class_name RunWindupAction
 extends ActionState
 
 
+@export var start_speed: float
 @export var run_physics: PhysicsState
 @export var windup_duration: float
-@export var input_grace_duration: float
+@export var max_release_time: float
 
 var windup_timer: float
-var reset_timer: float
+var held_timer: float
 var run_direction: int
+
+var last_dir: int
+var do_startup: bool
 
 
 ## runs this check every frame while inactive and 
 ## in the character's current pool of states
 func _startup_check() -> bool:
-	var left: bool = character.input["left"][0]
-	var right: bool = character.input["right"][0]
-	
-	if run_direction == 0:
-		if right:
-			reset_timer = input_grace_duration
-			run_direction = 1
-			
-		if left:
-			reset_timer = input_grace_duration
-			run_direction = -1
-	
-	else:
-		var inputting_run: bool = (run_direction < 0 and left) or (run_direction > 0 and right)
-		
-		if not inputting_run:
-			run_direction *= 2
-		
-		if inputting_run and abs(run_direction) > 1:
-			return true
-	
-	return false
+	return do_startup
 
 
 ## runs this check every frame while active
@@ -49,10 +32,10 @@ func _transition_check() -> String:
 
 ## runs once when this state begins being active
 func _on_enter() -> void:
+	do_startup = false
 	run_physics.start_direction = sign(run_direction)
 	
-	reset_timer = 0
-	run_direction = 0
+	held_timer = 0
 	windup_timer = windup_duration
 
 
@@ -60,10 +43,30 @@ func _on_enter() -> void:
 func _update(delta: float) -> void:
 	windup_timer -= delta
 
+	var input_dir: int = 0
+	if character.input["left"][0]: input_dir -= 1 
+	if character.input["right"][0]: input_dir += 1
+	
+	if input_dir == run_direction:
+		character.velocity.x = start_speed * run_direction
+		character.set_state("physics", run_physics)
+		windup_timer = 0
+
 
 ## always runs no matter what, before any of the other functions
 func _general_update(delta: float) -> void:
-	reset_timer -= delta
-	if reset_timer <= 0:
-		reset_timer = 0
-		run_direction = 0
+	var input_dir: int = 0
+	if character.input["left"][0]: input_dir -= 1 
+	if character.input["right"][0]: input_dir += 1
+	
+	if input_dir != last_dir:
+		if input_dir == 0 and held_timer < max_release_time:
+			run_direction = last_dir
+			do_startup = true
+		held_timer = 0
+	
+	elif input_dir != 0:
+		do_startup = false
+		held_timer += delta
+	
+	last_dir = input_dir
