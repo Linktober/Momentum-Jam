@@ -5,6 +5,7 @@ extends ActionState
 @export var swim_power: float
 @export var perfect_swim_power: float
 @export var swim_speed: float
+@export var perfect_swim_speed: float
 
 @export var swim_time: float
 @export var control_regain_window: float
@@ -13,7 +14,8 @@ extends ActionState
 @export var perfect_swim_window: float
 @export var press_buffer: float
 
-var is_perfect_swim: bool
+var do_perfect_swim: bool
+var perfect_swimming: bool
 var swim_timer: float
 var buffer_timer: float
 var swim_dir: Vector2
@@ -36,6 +38,9 @@ func _transition_check() -> String:
 
 ## runs once when this state begins being active
 func _on_enter() -> void:
+	perfect_swimming = do_perfect_swim
+	do_perfect_swim = false
+	
 	buffer_timer = 0
 	parent_physics.can_move = false
 	
@@ -46,9 +51,7 @@ func _on_enter() -> void:
 	if character.input["down"][0]: swim_dir.y += 1
 	
 	swim_timer = swim_time
-	character.velocity += (perfect_swim_power if is_perfect_swim else swim_power) * swim_dir
-	
-	is_perfect_swim = false
+	character.velocity += (perfect_swim_power if perfect_swimming else swim_power) * swim_dir
 
 
 ## runs once when this state stops being active
@@ -58,7 +61,8 @@ func _on_exit() -> void:
 
 ## runs every frame while active
 func _update(delta: float) -> void:
-	character.velocity += swim_dir * swim_speed * delta * (swim_timer / swim_time)
+	var speed: float = perfect_swim_speed if perfect_swimming else swim_speed
+	character.velocity += swim_dir * speed * delta * (swim_timer / swim_time)
 
 
 ## always runs no matter what, before any of the other functions
@@ -71,5 +75,5 @@ func _general_update(delta: float) -> void:
 	
 	if character.input["jump"][1]:
 		if buffer_timer <= 0 and abs(swim_timer + perfect_swim_interval) < perfect_swim_window:
-			is_perfect_swim = true
+			do_perfect_swim = true
 		buffer_timer = press_buffer
