@@ -47,9 +47,16 @@ func _on_enter() -> void:
 	landed = false
 	
 	calc_inputs()
-	sprite_rot = ball_direction.angle() + PI/2
+	sprite_rot = character.rotation
+	sprite_rot += PI/2 * character.facing_dir
+	
 	await get_tree().process_frame
 	sprite.flip_v = wrapf(sprite_rot, -PI, PI) > 0
+
+
+## runs once when this state stops being active
+func _on_exit() -> void:
+	character.animator.rotation /= 2
 
 
 func calc_inputs() -> Vector2:

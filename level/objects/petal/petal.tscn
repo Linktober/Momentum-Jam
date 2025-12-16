@@ -1,0 +1,44 @@
+[gd_scene load_steps=6 format=3 uid="uid://47d5qr13mh7m"]
+
+[ext_resource type="Script" uid="uid://m1absxshqc7e" path="res://level/objects/petal/petal.gd" id="1_ocx8v"]
+[ext_resource type="Shader" uid="uid://0aiwcmtbqvvg" path="res://misc/petal.gdshader" id="2_mjfuu"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_e3n8e"]
+shader = ExtResource("2_mjfuu")
+shader_parameter/influence = 0.5
+shader_parameter/saturation = 2.0000000149012003
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_r3g2v"]
+radius = 48.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_4r5sp"]
+radius = 12.0
+
+[node name="Petal" type="Area2D"]
+collision_layer = 0
+collision_mask = 4
+monitorable = false
+script = ExtResource("1_ocx8v")
+magnet_speed = 3.0
+
+[node name="ColorRect" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_e3n8e")
+offset_left = -8.0
+offset_top = -8.0
+offset_right = 8.0
+offset_bottom = 8.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_r3g2v")
+
+[node name="Collect" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 4
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Collect"]
+shape = SubResource("CircleShape2D_4r5sp")
+
+[connection signal="body_entered" from="." to="." method="body_entered"]
+[connection signal="body_exited" from="." to="." method="body_exited"]
+[connection signal="body_entered" from="Collect" to="." method="collect_body_entered"]

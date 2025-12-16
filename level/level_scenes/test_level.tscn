@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://cobk8lnewpxif"]
+[gd_scene load_steps=23 format=3 uid="uid://cobk8lnewpxif"]
 
 [ext_resource type="Script" uid="uid://cimamf4iibvtd" path="res://line_2d.gd" id="1_81cir"]
 [ext_resource type="Script" uid="uid://r1y7h7ppfe0j" path="res://level/level_scene.gd" id="1_gbniv"]
@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://bge0n8af06jnl" path="res://level/objects/collectible_placer/collectible_placer.tscn" id="6_ec8w2"]
 [ext_resource type="Texture2D" uid="uid://cqtsxjnqlfb5i" path="res://character/sprites/idle.png" id="7_q8ubn"]
 [ext_resource type="Script" uid="uid://tvi1ptnuyihn" path="res://level/objects/player_spawner/player_spawner.gd" id="8_q8ubn"]
+[ext_resource type="PackedScene" uid="uid://47d5qr13mh7m" path="res://level/objects/petal/petal.tscn" id="12_ec8w2"]
 
 [sub_resource type="Animation" id="Animation_5vw27"]
 length = 0.001
@@ -259,3 +260,6 @@ right_scene = "res://level/level_scenes/test_level.tscn"
 libraries = {
 &"": SubResource("AnimationLibrary_ksba8")
 }
+
+[node name="Petal" parent="." instance=ExtResource("12_ec8w2")]
+position = Vector2(-192, 32)

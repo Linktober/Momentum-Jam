@@ -10,7 +10,7 @@ var last_rotator: Rotator
 var last_dir: int
 
 
-func _update() -> void:
+func _update(delta: float) -> void:
 	var new_anim: String
 	
 	var sprite_offset: Vector2i
@@ -41,19 +41,22 @@ func _update() -> void:
 		sprite_scale *= character.physics.sprite_scale
 		if not is_instance_valid(character.action):
 			do_flip_scale = character.physics.do_flip_scale
+		if not is_instance_valid(animator):
 			animator = character.physics.animator
+		if not is_instance_valid(rotator):
 			rotator = character.physics.rotator
 	
 	var flip_factor: float = character.facing_dir if do_flip_scale else 1
 	position = sprite_offset
-	rotation = sprite_rot * flip_factor
 	skew = sprite_skew
 	scale = sprite_scale * Vector2(flip_factor, 1)
 	
 	if is_instance_valid(rotator):
 		if rotator != last_rotator:
 			rotator.on_enter()
-		rotation_degrees = rotator.update_rotation()
+		rotation = rotator.update_rotation(delta)
+	else:
+		rotation = sprite_rot * flip_factor
 	
 	if new_anim == "":
 		if animation_player.is_playing(): 

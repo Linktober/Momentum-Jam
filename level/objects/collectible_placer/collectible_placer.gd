@@ -6,8 +6,15 @@ extends Path2D
 @export var collectible_scene: PackedScene
 @export var collectible_count: int
 
+@export var place_on_ready: bool = true
+
 
 func _ready() -> void:
+	if place_on_ready:
+		place()
+
+
+func place() -> void:
 	for i: float in range(collectible_count):
 		path_follow_2d.progress_ratio = (i + 1) / collectible_count
 		

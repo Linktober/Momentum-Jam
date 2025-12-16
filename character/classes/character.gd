@@ -153,7 +153,7 @@ func _physics_process(delta: float) -> void:
 	
 	move_and_slide()
 	on_ground = is_on_floor()
-	animator._update()
+	animator._update(delta)
 
 
 ### Physics

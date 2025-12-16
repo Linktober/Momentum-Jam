@@ -14,6 +14,9 @@ extends PhysicsState
 @export var set_facing: bool = true
 @export var coyote_time: float
 
+@export var anim_target_speed: float
+@export var sprite: AnimatedSprite2D
+
 
 func do_movement(delta: float, move_dir: int) -> void:
 	var working_accel: float = 0.0
@@ -67,6 +70,11 @@ func _update(delta: float) -> void:
 		do_friction(delta)
 	else:
 		do_movement(delta, move_dir)
+	
+	animation = "idle"
+	if abs(character.velocity.x) > 50:
+		sprite.speed_scale = abs(character.velocity.x) / anim_target_speed
+		animation = "walk"
 	
 	## run base function
 	super(delta)

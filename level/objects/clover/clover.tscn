@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://cg1xca6iswg5y"]
 
 [ext_resource type="Script" uid="uid://cvnlowip10k3n" path="res://level/objects/clover/clover.gd" id="1_cejkl"]
-[ext_resource type="Shader" uid="uid://bj0q8wafpmjw5" path="res://misc/kalei.gdshader" id="1_gwlkb"]
+[ext_resource type="Shader" uid="uid://bj0q8wafpmjw5" path="res://misc/clover.gdshader" id="1_gwlkb"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ec8w2"]
 shader = ExtResource("1_gwlkb")
