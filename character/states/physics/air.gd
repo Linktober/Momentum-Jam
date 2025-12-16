@@ -13,6 +13,7 @@ extends PhysicsState
 @export var water_check: Area2D
 
 @export_group("Misc")
+@export var do_air_animation: bool = true
 @export var bounce_factor: float = 0
 var did_bounce: bool
 
@@ -87,5 +88,8 @@ func _update(delta: float) -> void:
 	
 	## run base function
 	super(delta)
+	
+	if do_air_animation:
+		animation = "fall" if character.velocity.y > 0 else "jump"
 	
 	last_velocity = character.velocity

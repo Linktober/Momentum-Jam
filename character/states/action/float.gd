@@ -23,9 +23,8 @@ func _startup_check() -> bool:
 ## the string returned is the name of the state to change to
 ## return self.name for no change!
 func _transition_check() -> String:
-	if float_timer <= 0 or character.physics is GroundPhysics:
-		if not character.input["jump"][0]:
-			return ""
+	if (float_timer <= 0 and not character.input["jump"][0]) or character.physics is GroundPhysics:
+		return ""
 	return name
 
 

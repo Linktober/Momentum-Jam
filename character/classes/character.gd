@@ -3,7 +3,8 @@ extends CharacterBody2D
 
 
 ### Basics
-@onready var initial_snap: float = floor_snap_length
+@warning_ignore("narrowing_conversion")
+@onready var initial_snap: int = floor_snap_length
 var input: Dictionary
 var gravity: float
 var facing_dir: int = 1 : 
@@ -134,12 +135,14 @@ func _physics_process(delta: float) -> void:
 	var last_override = collision_override
 	collision_override = null
 	
-	var enable_snap: bool = true
+	var snap_override: int = -1
 	if is_instance_valid(physics):
-		enable_snap = enable_snap and physics.enable_snap
+		if physics.snap_override >= 0:
+			snap_override = physics.snap_override
 		collision_override = physics.shape_override
 	if is_instance_valid(action):
-		enable_snap = enable_snap and action.enable_snap
+		if action.snap_override >= 0:
+			snap_override = action.snap_override
 		collision_override = physics.shape_override
 	if is_instance_valid(last_override) and last_override != collision_override:
 		last_override.disabled = true
@@ -149,7 +152,7 @@ func _physics_process(delta: float) -> void:
 		default_collision.disabled = true
 		collision_override.disabled = false
 	
-	floor_snap_length = initial_snap if enable_snap else 0.0
+	floor_snap_length = initial_snap if snap_override < 0 else snap_override
 	
 	move_and_slide()
 	on_ground = is_on_floor()

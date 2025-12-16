@@ -23,7 +23,7 @@ extends Node
 @export var rotator: Rotator
 
 @export_group("Collision")
-@export var enable_snap: bool = true ## floor snapping
+@export var snap_override: int = -1 ## floor snapping
 @export var shape_override: CollisionShape2D
 
 

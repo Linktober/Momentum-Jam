@@ -6,9 +6,16 @@ extends GroundPhysics
 @export var stop_buffer: float
 var start_direction: int
 var stop_timer: float
+var initiate_run: bool
 
 @export_group("Gravity")
 @export var max_fall: float
+
+
+## runs this check every frame while inactive and 
+## in the character's current pool of states
+func _startup_check() -> bool:
+	return character.on_ground and initiate_run
 
 
 ## runs this check every frame while active
@@ -37,6 +44,7 @@ func ground_check() -> String:
 ## runs once when this state begins being active
 func _on_enter() -> void:
 	stop_timer = stop_buffer
+	initiate_run = true
 
 
 func _update(delta: float) -> void:
@@ -55,3 +63,16 @@ func _update(delta: float) -> void:
 		stop_timer = stop_buffer
 	
 	super(delta)
+	
+	if animation == "walk":
+		animation = "run"
+
+
+## always runs no matter what, before any of the other functions
+func _general_update(_delta: float) -> void:
+	var input_dir: int = 0
+	if character.input["left"][0]: input_dir -= 1 
+	if character.input["right"][0]: input_dir += 1
+	
+	if initiate_run and input_dir != start_direction:
+		initiate_run = false

@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=3 uid="uid://dqwlfcfa1tbol"]
+[gd_scene load_steps=52 format=3 uid="uid://dqwlfcfa1tbol"]
 
 [ext_resource type="Script" uid="uid://ddj2h3tjnqy5f" path="res://character/classes/character.gd" id="1_oul6g"]
 [ext_resource type="Script" uid="uid://b42b2cxmwv8jk" path="res://character/rotators/air.gd" id="2_0shic"]
@@ -15,7 +15,9 @@
 [ext_resource type="Texture2D" uid="uid://dohxjd4yiqhjp" path="res://character/sprites/move.png" id="5_6kuvt"]
 [ext_resource type="Script" uid="uid://ccbgj2r3ghy1f" path="res://character/states/action/float.gd" id="5_dy06j"]
 [ext_resource type="Script" uid="uid://c7a8bmoye1aui" path="res://character/states/action/jump.gd" id="5_o6jyn"]
+[ext_resource type="Texture2D" uid="uid://b3c2fjpeg6i4o" path="res://character/sprites/jump.png" id="7_wlm6a"]
 [ext_resource type="Script" uid="uid://ddorebuj6vyp7" path="res://character/states/action/run_windup.gd" id="9_qkjfd"]
+[ext_resource type="Texture2D" uid="uid://daibdaf0dejyl" path="res://character/sprites/run.png" id="10_c0nog"]
 [ext_resource type="Script" uid="uid://ccpx31cqeve4t" path="res://character/states/physics/run.gd" id="10_gx66j"]
 [ext_resource type="Script" uid="uid://64e26a6bvbu7" path="res://character/classes/state_link.gd" id="11_8brn5"]
 [ext_resource type="Script" uid="uid://d0kxrujyqivry" path="res://character/states/physics/water.gd" id="14_hq3og"]
@@ -288,11 +290,86 @@ tracks/2/keys = {
 }]
 }
 
+[sub_resource type="Animation" id="Animation_c0nog"]
+resource_name = "jump"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Character:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"jump"]
+}
+
+[sub_resource type="Animation" id="Animation_5s0vb"]
+resource_name = "fall"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Character:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"fall"]
+}
+
+[sub_resource type="Animation" id="Animation_4ekbm"]
+resource_name = "run"
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Ball:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Character:animation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"run"]
+}
+tracks/2/type = "method"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Character")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [&"run", 1.0, false],
+"method": &"play"
+}]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_dy06j"]
 _data = {
 &"RESET": SubResource("Animation_tgjim"),
 &"ball": SubResource("Animation_wy5t8"),
+&"fall": SubResource("Animation_5s0vb"),
 &"idle": SubResource("Animation_o6jyn"),
+&"jump": SubResource("Animation_c0nog"),
+&"run": SubResource("Animation_4ekbm"),
 &"walk": SubResource("Animation_6610h")
 }
 
@@ -300,8 +377,16 @@ _data = {
 atlas = ExtResource("3_hd715")
 region = Rect2(0, 0, 48, 48)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_4ekbm"]
+atlas = ExtResource("7_wlm6a")
+region = Rect2(48, 0, 48, 48)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_orckd"]
 atlas = ExtResource("3_b4qc5")
+region = Rect2(0, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kxp0i"]
+atlas = ExtResource("7_wlm6a")
 region = Rect2(0, 0, 48, 48)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_0shic"]
@@ -320,6 +405,38 @@ region = Rect2(96, 0, 48, 48)
 atlas = ExtResource("5_6kuvt")
 region = Rect2(144, 0, 48, 48)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_5s0vb"]
+atlas = ExtResource("10_c0nog")
+region = Rect2(0, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yn8gt"]
+atlas = ExtResource("10_c0nog")
+region = Rect2(48, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q7srn"]
+atlas = ExtResource("10_c0nog")
+region = Rect2(96, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a87gu"]
+atlas = ExtResource("10_c0nog")
+region = Rect2(144, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_psflj"]
+atlas = ExtResource("10_c0nog")
+region = Rect2(192, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h0hwg"]
+atlas = ExtResource("10_c0nog")
+region = Rect2(240, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_iaewr"]
+atlas = ExtResource("10_c0nog")
+region = Rect2(288, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5tbnp"]
+atlas = ExtResource("10_c0nog")
+region = Rect2(336, 0, 48, 48)
+
 [sub_resource type="SpriteFrames" id="SpriteFrames_hq3og"]
 animations = [{
 "frames": [{
@@ -332,10 +449,26 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_4ekbm")
+}],
+"loop": true,
+"name": &"fall",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_orckd")
 }],
 "loop": true,
 "name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kxp0i")
+}],
+"loop": true,
+"name": &"jump",
 "speed": 5.0
 }, {
 "frames": [{
@@ -353,6 +486,35 @@ animations = [{
 }],
 "loop": true,
 "name": &"move",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5s0vb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yn8gt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_q7srn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a87gu")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_psflj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_h0hwg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_iaewr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5tbnp")
+}],
+"loop": true,
+"name": &"run",
 "speed": 12.0
 }]
 
@@ -435,7 +597,7 @@ max_speed = 350.0
 max_fall = 850.0
 bounce_factor = 0.15
 ground_name = "Ground"
-animation = "idle"
+animation = "fall"
 rotator = NodePath("../../Rotators/Air")
 metadata/_custom_type_script = "uid://bobthsffwufj0"
 
@@ -469,6 +631,7 @@ max_fall = 850.0
 is_buoyant = true
 float_factor = 0.5
 water_check = NodePath("../../WaterCheck")
+do_air_animation = false
 bounce_factor = 0.1
 ground_name = "Ground"
 set_facing = false
@@ -501,6 +664,8 @@ variable_jump_factor = 0.63
 snap_buffer = 0.1
 press_buffer = 0.2
 allow_priority_override = true
+animation = "jump"
+snap_override = 0
 metadata/_custom_type_script = "uid://c7a8bmoye1aui"
 
 [node name="RunWindup" type="Node" parent="PhysicsStates/Ground" node_paths=PackedStringArray("run_physics")]
@@ -509,13 +674,13 @@ start_speed = 100.0
 run_physics = NodePath("../../Run")
 windup_duration = 0.3
 max_release_time = 0.08
-animation = "idle"
+animation = "jump"
 metadata/_custom_type_script = "uid://ddorebuj6vyp7"
 
 [node name="Run" type="Node" parent="PhysicsStates" node_paths=PackedStringArray("sprite", "rotator")]
 script = ExtResource("10_gx66j")
 ground_name = "Ground"
-stop_buffer = 0.1
+stop_buffer = 0.05
 max_fall = 850.0
 accel = 1750.0
 max_speed = 500.0
@@ -525,8 +690,11 @@ air_name = "Air"
 coyote_time = 0.15
 anim_target_speed = 300.0
 sprite = NodePath("../../Animator/Character")
-animation = "idle"
+priority = 1
+allow_priority_override = true
+animation = "run"
 rotator = NodePath("../../Rotators/Ground")
+snap_override = 16
 metadata/_custom_type_script = "uid://djxg21q4acmle"
 
 [node name="JumpLink" type="Node" parent="PhysicsStates/Run" node_paths=PackedStringArray("link_to")]
@@ -544,6 +712,7 @@ enter_factor = 0.5
 exit_factor = 1.5
 priority = 1
 rotator = NodePath("../../Rotators/Water")
+snap_override = 0
 metadata/_custom_type_script = "uid://d0kxrujyqivry"
 
 [node name="BallLink" type="Node" parent="PhysicsStates/Water" node_paths=PackedStringArray("link_to")]

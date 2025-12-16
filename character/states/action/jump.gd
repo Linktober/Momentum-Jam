@@ -33,7 +33,7 @@ func _transition_check() -> String:
 ## runs once when this state begins being active
 func _on_enter() -> void:
 	character.on_ground = false
-	enable_snap = false
+	snap_override = 0
 	jump_released = false
 	
 	snap_timer = snap_buffer
@@ -50,7 +50,7 @@ func _update(delta: float) -> void:
 	if snap_timer > 0:
 		snap_timer -= delta
 	else:
-		enable_snap = true
+		snap_override = -1
 	
 	if not jump_released and not character.input["jump"][0]:
 		jump_released = true
