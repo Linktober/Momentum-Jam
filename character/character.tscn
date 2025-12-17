@@ -829,7 +829,7 @@ bus = &"Voices"
 
 [node name="VictoryVoice" type="AudioStreamPlayer" parent="Sounds"]
 stream = ExtResource("8_0l5d1")
-volume_db = -1.0
+volume_db = -1.5
 pitch_scale = 0.98
 bus = &"Voices"
 

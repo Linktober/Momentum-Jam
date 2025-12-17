@@ -35,9 +35,9 @@ func change_scene(scene_path: String, character: Character, transition_dir: int)
 	
 	get_tree().paused = false
 	
-	var cam_offset := Vector2(0, -level.character_camera.air_offset)
+	var cam_offset := Vector2(0, -level.character_camera.air_offset / 2)
 	if character.on_ground:
-		cam_offset.y = -level.character_camera.ground_offset
+		cam_offset.y = -level.character_camera.ground_offset /  2
 	
 	level.character_camera.character = character
 	level.character_camera.camera_offset = cam_offset
