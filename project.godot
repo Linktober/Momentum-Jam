@@ -35,7 +35,8 @@ folder_colors={
 "res://character/": "teal",
 "res://global/": "yellow",
 "res://level/": "blue",
-"res://music/": "pink"
+"res://music/": "pink",
+"res://shaders/": "gray"
 }
 
 [gui]

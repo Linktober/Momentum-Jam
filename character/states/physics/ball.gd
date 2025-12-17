@@ -11,6 +11,9 @@ var ball_direction := Vector2.ZERO
 var launch_speed: float
 var can_launch: bool
 
+@export var max_shrink: float
+@export var scale_speed: float = 1
+
 @export var direction_buffer: float
 @export var rot_speed: float = 1
 @export var sprite: AnimatedSprite2D
@@ -45,6 +48,7 @@ func _transition_check() -> String:
 ## runs once when this state begins being active
 func _on_enter() -> void:
 	landed = false
+	sprite_scale = Vector2.ONE
 	
 	calc_inputs()
 	sprite_rot = character.rotation
@@ -97,9 +101,9 @@ func _update(delta: float) -> void:
 	if input_direction.y == 0:
 		buffer_vector.y = move_toward(buffer_vector.y, 0, delta)
 	
-	## alpha is done this way to preserve framerate independance
-	var alpha: float = 1.0 - exp(-rot_speed * delta)
-	sprite_rot = lerp_angle(sprite_rot, ball_direction.angle() + PI/2, alpha)
+	## framerate independance
+	var rot_alpha: float = 1.0 - exp(-rot_speed * delta)
+	sprite_rot = lerp_angle(sprite_rot, ball_direction.angle() + PI/2, rot_alpha)
 	sprite.flip_v = wrapf(sprite_rot, -PI, PI) > 0
 	
 	for index: int in character.get_slide_collision_count():
@@ -114,12 +118,19 @@ func _update(delta: float) -> void:
 			can_launch = true
 			character.on_ground = false
 			
+			var total_shrink: float = max_shrink * (character.velocity.length() / max_fall)
+			sprite_scale = Vector2.ONE - (abs(normal.rotated(ball_direction.angle() + PI/2)) * total_shrink)
+			
 			if abs(character.velocity.x) < min_bounce_vel and ball_direction.x != 0:
 				character.velocity.x = min_bounce_vel * ball_direction.x
 			if abs(character.velocity.y) < min_bounce_vel and ball_direction.y != 0:
 				character.velocity.y = min_bounce_vel * ball_direction.y
 			
 			break
+
+	## framerate independance
+	var scale_alpha: float = 1.0 - exp(-scale_speed * delta)
+	sprite_scale = lerp(sprite_scale, Vector2.ONE, scale_alpha)
 
 	## run base function
 	super(delta)

@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://47d5qr13mh7m"]
 
 [ext_resource type="Script" uid="uid://m1absxshqc7e" path="res://level/objects/petal/petal.gd" id="1_ocx8v"]
-[ext_resource type="Shader" uid="uid://0aiwcmtbqvvg" path="res://misc/petal.gdshader" id="2_mjfuu"]
+[ext_resource type="Shader" uid="uid://0aiwcmtbqvvg" path="res://shaders/petal.gdshader" id="2_mjfuu"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_e3n8e"]
 shader = ExtResource("2_mjfuu")
