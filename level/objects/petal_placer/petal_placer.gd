@@ -9,6 +9,10 @@ var collected_petals: Array[bool]
 
 
 func _ready() -> void:
+	if globals_id in Globals.completed_petals: 
+		queue_free()
+		return
+	
 	if is_instance_valid(clover):
 		clover.deactivate()
 	collected_petals.resize(collectible_count)
@@ -27,6 +31,7 @@ func collected(index: int) -> void:
 	if collected_petals.count(false) <= 0:
 		timer.stop()
 		clover.activate()
+		Globals.completed_petals.append(globals_id)
 
 
 func timeout() -> void:
