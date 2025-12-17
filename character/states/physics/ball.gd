@@ -14,6 +14,9 @@ var can_launch: bool
 @export var max_shrink: float
 @export var scale_speed: float = 1
 
+@export var pop: Node2D
+@export var pop_speed_target: float
+
 @export var direction_buffer: float
 @export var rot_speed: float = 1
 @export var sprite: AnimatedSprite2D
@@ -34,6 +37,9 @@ func _startup_check() -> bool:
 func _transition_check() -> String:
 	if not character.input["ball"][0]:
 		if can_launch:
+			pop.strength_factor = (launch_speed - base_launch_speed/2) / pop_speed_target
+			pop.pop(character.animator.global_position)
+			
 			character.velocity = ball_direction * launch_speed
 			launch_speed = base_launch_speed
 			can_launch = false

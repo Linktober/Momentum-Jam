@@ -11,7 +11,6 @@ extends AnimatedSprite2D
 @export var lantern_target: LanternTarget
 var last_global: Vector2
 
-
 func _physics_process(delta: float) -> void:
 	if lantern_target.instant_follow:
 		global_position = lantern_target.global_position
@@ -28,7 +27,8 @@ func _physics_process(delta: float) -> void:
 	
 	var sine: float = sin(Time.get_unix_time_from_system() * sine_speed) * sine_amount
 	
-	global_position = last_global
+	if last_global != Vector2.INF:
+		global_position = last_global
 	global_position = lerp(
 		global_position, 
 		lantern_target.global_position + Vector2(0, sine), 
@@ -36,3 +36,7 @@ func _physics_process(delta: float) -> void:
 	)
 	
 	last_global = global_position
+
+
+func _exit_tree() -> void:
+	last_global = Vector2.INF

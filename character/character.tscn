@@ -1,4 +1,4 @@
-[gd_scene load_steps=64 format=3 uid="uid://dqwlfcfa1tbol"]
+[gd_scene load_steps=70 format=3 uid="uid://dqwlfcfa1tbol"]
 
 [ext_resource type="Script" uid="uid://ddj2h3tjnqy5f" path="res://character/classes/character.gd" id="1_oul6g"]
 [ext_resource type="Script" uid="uid://b42b2cxmwv8jk" path="res://character/rotators/air.gd" id="2_0shic"]
@@ -18,6 +18,7 @@
 [ext_resource type="Texture2D" uid="uid://b3c2fjpeg6i4o" path="res://character/sprites/jump.png" id="7_wlm6a"]
 [ext_resource type="Script" uid="uid://84e4k7324ns8" path="res://character/lantern/rainbow.gd" id="8_q7srn"]
 [ext_resource type="Script" uid="uid://ddorebuj6vyp7" path="res://character/states/action/run_windup.gd" id="9_qkjfd"]
+[ext_resource type="Script" uid="uid://ca8wcnqxadc5n" path="res://character/lantern/pop.gd" id="10_a87gu"]
 [ext_resource type="Texture2D" uid="uid://daibdaf0dejyl" path="res://character/sprites/run.png" id="10_c0nog"]
 [ext_resource type="Script" uid="uid://ccpx31cqeve4t" path="res://character/states/physics/run.gd" id="10_gx66j"]
 [ext_resource type="Texture2D" uid="uid://dvtclf162quxe" path="res://character/sprites/lantern.png" id="11_5s0vb"]
@@ -71,6 +72,107 @@ fill = 1
 fill_from = Vector2(0.5, 0.5)
 fill_to = Vector2(0.5, 0)
 metadata/_snap_enabled = true
+
+[sub_resource type="Gradient" id="Gradient_h0hwg"]
+offsets = PackedFloat32Array(0, 0.45, 0.9, 1)
+colors = PackedColorArray(1, 1, 1, 0.5647059, 1, 1, 1, 0.1254902, 1, 1, 1, 1, 1, 1, 1, 0)
+metadata/_snap_enabled = true
+metadata/_snap_count = 20
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_iaewr"]
+gradient = SubResource("Gradient_h0hwg")
+width = 128
+height = 128
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.5, 0)
+metadata/_snap_enabled = true
+
+[sub_resource type="Animation" id="Animation_q7srn"]
+resource_name = "pop"
+length = 0.5
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../Pop/Ball:texture:gradient:offsets")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(0.5, 2),
+"update": 0,
+"values": [PackedFloat32Array(0, 0.45, 0.9, 1), PackedFloat32Array(0, 0.9, 0.95, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("../Pop/Ball:texture:gradient:colors")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.5),
+"transitions": PackedFloat32Array(0.5, 0.5, 1),
+"update": 0,
+"values": [PackedColorArray(1, 1, 1, 0.5647059, 1, 1, 1, 0.1254902, 1, 1, 1, 1, 1, 1, 1, 0), PackedColorArray(1, 1, 1, 0.5647059, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0), PackedColorArray(1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("../Pop/Ball:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
+[sub_resource type="Animation" id="Animation_a87gu"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../Pop/Ball:texture:gradient:offsets")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [PackedFloat32Array(0, 0.45, 0.9, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("../Pop/Ball:texture:gradient:colors")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [PackedColorArray(1, 1, 1, 0.5647059, 1, 1, 1, 0.1254902, 1, 1, 1, 1, 1, 1, 1, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("../Pop/Ball:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_a87gu"]
+_data = {
+&"RESET": SubResource("Animation_a87gu"),
+&"pop": SubResource("Animation_q7srn")
+}
 
 [sub_resource type="Animation" id="Animation_tgjim"]
 length = 0.001
@@ -719,6 +821,33 @@ script = ExtResource("8_q7srn")
 saturation = 0.25
 rainbow_speed = 1.0
 
+[node name="Pop" type="Node2D" parent="."]
+physics_interpolation_mode = 2
+script = ExtResource("10_a87gu")
+scale_speed = 2.0
+scale_strength = 8.0
+
+[node name="Ball" type="TextureRect" parent="Pop"]
+physics_interpolation_mode = 0
+visible = false
+texture_filter = 2
+material = SubResource("CanvasItemMaterial_yn8gt")
+offset_left = -12.0
+offset_top = -12.0
+offset_right = 12.0
+offset_bottom = 12.0
+pivot_offset = Vector2(12, 12)
+texture = SubResource("GradientTexture2D_iaewr")
+expand_mode = 1
+script = ExtResource("8_q7srn")
+saturation = 0.25
+rainbow_speed = 1.0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Pop"]
+libraries = {
+&"": SubResource("AnimationLibrary_a87gu")
+}
+
 [node name="Animator" type="Node2D" parent="."]
 unique_name_in_owner = true
 script = ExtResource("2_1l1n4")
@@ -731,7 +860,6 @@ libraries = {
 
 [node name="Ball" type="TextureRect" parent="Animator"]
 visible = false
-modulate = Color(1, 0.7529412, 0.7529412, 1)
 texture_filter = 2
 material = SubResource("CanvasItemMaterial_yn8gt")
 texture = SubResource("GradientTexture2D_q7srn")
@@ -780,7 +908,7 @@ subsequent_damp = 1.5
 variable_jump_factor = 0.63
 metadata/_custom_type_script = "uid://ccbgj2r3ghy1f"
 
-[node name="Ball" type="Node" parent="PhysicsStates" node_paths=PackedStringArray("sprite", "water_check", "shape_override")]
+[node name="Ball" type="Node" parent="PhysicsStates" node_paths=PackedStringArray("pop", "sprite", "water_check", "shape_override")]
 script = ExtResource("4_tgjim")
 min_bounce_vel = 200.0
 bounce_damp = 1.003
@@ -788,6 +916,8 @@ base_launch_speed = 200.0
 launch_damp = 2.5
 max_shrink = 0.4
 scale_speed = 4.0
+pop = NodePath("../../Pop")
+pop_speed_target = 600.0
 direction_buffer = 0.07
 rot_speed = 12.0
 sprite = NodePath("../../Animator/Character")
