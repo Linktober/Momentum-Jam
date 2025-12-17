@@ -1,4 +1,4 @@
-[gd_scene load_steps=70 format=3 uid="uid://dqwlfcfa1tbol"]
+[gd_scene load_steps=73 format=3 uid="uid://dqwlfcfa1tbol"]
 
 [ext_resource type="Script" uid="uid://ddj2h3tjnqy5f" path="res://character/classes/character.gd" id="1_oul6g"]
 [ext_resource type="Script" uid="uid://b42b2cxmwv8jk" path="res://character/rotators/air.gd" id="2_0shic"]
@@ -29,6 +29,9 @@
 [ext_resource type="Script" uid="uid://d0kxrujyqivry" path="res://character/states/physics/water.gd" id="14_hq3og"]
 [ext_resource type="Script" uid="uid://rgxdfuawxo3h" path="res://character/states/action/swim.gd" id="15_orckd"]
 [ext_resource type="Script" uid="uid://b84f6plg0kbok" path="res://character/states/physics/collect.gd" id="16_1dqym"]
+[ext_resource type="Script" uid="uid://15g1y80ayb7n" path="res://character/classes/sprite_effects.gd" id="16_psflj"]
+[ext_resource type="Material" uid="uid://cnepyk3onvhj" path="res://character/misc/blur_shader.tres" id="17_h0hwg"]
+[ext_resource type="Script" uid="uid://drhhnqn0igpqn" path="res://character/misc/trail.gd" id="18_iaewr"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0xm2m"]
 size = Vector2(16, 32)
@@ -803,7 +806,6 @@ lantern_target = NodePath("../Animator/LanternTarget")
 
 [node name="Light" type="TextureRect" parent="Lantern"]
 modulate = Color(1, 0.7529412, 0.7529412, 1)
-show_behind_parent = true
 texture_filter = 2
 material = SubResource("CanvasItemMaterial_yn8gt")
 anchors_preset = 15
@@ -872,6 +874,18 @@ rainbow_speed = 1.0
 position = Vector2(0, -24)
 sprite_frames = SubResource("SpriteFrames_hq3og")
 animation = &"idle"
+script = ExtResource("16_psflj")
+materials = Array[ShaderMaterial]([null, ExtResource("17_h0hwg")])
+unblur_speed = 4.0
+trail_divider = 8.0
+
+[node name="Trail" type="AnimatedSprite2D" parent="Animator/Character"]
+visible = false
+show_behind_parent = true
+use_parent_material = true
+sprite_frames = SubResource("SpriteFrames_hq3og")
+animation = &"idle"
+script = ExtResource("18_iaewr")
 
 [node name="LanternTarget" type="Node2D" parent="Animator"]
 position = Vector2(-26, -32)
@@ -918,6 +932,7 @@ max_shrink = 0.4
 scale_speed = 4.0
 pop = NodePath("../../Pop")
 pop_speed_target = 600.0
+blur_strength = 3.0
 direction_buffer = 0.07
 rot_speed = 12.0
 sprite = NodePath("../../Animator/Character")
@@ -1000,9 +1015,10 @@ metadata/_custom_type_script = "uid://64e26a6bvbu7"
 script = ExtResource("14_hq3og")
 accel = 500.0
 max_speed = 300.0
-friction_decay = 0.1
+friction_linear = 100.0
+friction_decay = 0.8
 water_check = NodePath("../../WaterCheck")
-enter_factor = 0.5
+enter_factor = 0.25
 exit_factor = 1.5
 priority = 1
 rotator = NodePath("../../Rotators/Water")
@@ -1018,8 +1034,8 @@ metadata/_custom_type_script = "uid://64e26a6bvbu7"
 script = ExtResource("15_orckd")
 swim_power = 125.0
 perfect_swim_power = 250.0
-swim_speed = 1000.0
-perfect_swim_speed = 1600.0
+swim_speed = 500.0
+perfect_swim_speed = 600.0
 swim_delay = 0.05
 swim_time = 0.3
 control_regain_window = 0.1

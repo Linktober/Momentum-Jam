@@ -55,7 +55,7 @@ func _update(delta: float) -> void:
 		if character.input["up"][0]: move_dir.y -= 1
 		if character.input["down"][0]: move_dir.y += 1
 	
-	if move_dir.x != 0:
+	if move_dir.x != 0 and abs(character.velocity).x < max_speed:
 		character.facing_dir = int(move_dir.x)
 		character.velocity.x = move_toward(
 			character.velocity.x, max_speed * move_dir.x , accel * delta)
@@ -65,7 +65,7 @@ func _update(delta: float) -> void:
 		var decay_factor: float = pow(friction_decay, delta)
 		character.velocity.x *= decay_factor
 	
-	if move_dir.y != 0:
+	if move_dir.y != 0 and abs(character.velocity).y < max_speed:
 		character.velocity.y = move_toward(
 			character.velocity.y, max_speed * move_dir.y, accel * delta)
 	else:

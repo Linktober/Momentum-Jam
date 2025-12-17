@@ -39,6 +39,7 @@ func _physics_process(delta: float) -> void:
 		target_offset.y = -ground_offset
 	
 	target_offset += character.velocity / velocity_offset_damp
+	target_offset.y /= 2
 	
 	var zoom_subtract: float = max(0, abs(character.velocity.x) - zoom_out_threshold) / zoom_out_damp
 	var final_zoom: float = clamp(1 - zoom_subtract, min_zoom, max_zoom)
