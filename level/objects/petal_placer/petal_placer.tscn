@@ -1,0 +1,41 @@
+[gd_scene load_steps=7 format=3 uid="uid://drha351nbsdeu"]
+
+[ext_resource type="PackedScene" uid="uid://bge0n8af06jnl" path="res://level/objects/collectible_placer/collectible_placer.tscn" id="1_daiuu"]
+[ext_resource type="Script" uid="uid://blgo5crvh2d17" path="res://level/objects/petal_placer/petal_placer.gd" id="1_nc2yb"]
+[ext_resource type="PackedScene" uid="uid://47d5qr13mh7m" path="res://level/objects/petal/petal.tscn" id="3_4ux1n"]
+[ext_resource type="Shader" uid="uid://0aiwcmtbqvvg" path="res://shaders/petal.gdshader" id="3_daiuu"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_4ux1n"]
+shader = ExtResource("3_daiuu")
+shader_parameter/influence = 0.5
+shader_parameter/saturation = 1.30000000447036
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_2hdcd"]
+radius = 48.0
+
+[node name="PetalPlacer" instance=ExtResource("1_daiuu")]
+script = ExtResource("1_nc2yb")
+collectible_scene = ExtResource("3_4ux1n")
+place_on_ready = false
+
+[node name="Spawner" type="Area2D" parent="." index="2"]
+collision_layer = 0
+collision_mask = 4
+monitorable = false
+
+[node name="ColorRect" type="ColorRect" parent="Spawner" index="0"]
+material = SubResource("ShaderMaterial_4ux1n")
+offset_left = -8.0
+offset_top = -8.0
+offset_right = 8.0
+offset_bottom = 8.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Spawner" index="1"]
+shape = SubResource("CircleShape2D_2hdcd")
+
+[node name="Timer" type="Timer" parent="." index="3"]
+wait_time = 3.0
+one_shot = true
+
+[connection signal="body_entered" from="Spawner" to="." method="spawner_entered"]
+[connection signal="timeout" from="Timer" to="." method="timeout"]

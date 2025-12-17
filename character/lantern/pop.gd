@@ -5,14 +5,29 @@ extends Node2D
 @export var scale_speed: float
 @export var scale_strength: float
 
+var character: Character
+
 var strength_factor: float
 var pop_position: Vector2
 var target_scale: Vector2
+var tree_exit_known: bool = false
 
 
-func _ready() -> void:
+func _enter_tree() -> void:
+	if not is_instance_valid(character) or get_parent() == character:
+		character = get_parent()
+		character.remove_child.call_deferred(self)
+		character.get_parent().add_child.call_deferred(self)
+		tree_exit_known = true
+
+
+func _exit_tree() -> void:
+	if tree_exit_known:
+		tree_exit_known = false
+		return
+	
 	get_parent().remove_child.call_deferred(self)
-	get_owner().get_parent().add_child.call_deferred(self)
+	character.add_child.call_deferred(self)
 
 
 func pop(pop_pos: Vector2):

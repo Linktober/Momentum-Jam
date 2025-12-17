@@ -804,7 +804,7 @@ rot_divide = 3.0
 sine_amount = 4.0
 sine_speed = 1.0
 follow_speed = 12.0
-lantern_target = NodePath("../Animator/LanternTarget")
+lantern_target = NodePath("../Scaler/Animator/LanternTarget")
 
 [node name="Light" type="TextureRect" parent="Lantern"]
 texture_filter = 2
@@ -853,17 +853,19 @@ libraries = {
 &"": SubResource("AnimationLibrary_a87gu")
 }
 
-[node name="Animator" type="Node2D" parent="."]
+[node name="Scaler" type="Node2D" parent="."]
+
+[node name="Animator" type="Node2D" parent="Scaler"]
 unique_name_in_owner = true
 script = ExtResource("2_1l1n4")
 metadata/_custom_type_script = "uid://dodc7pappdgl2"
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Animator"]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Scaler/Animator"]
 libraries = {
 &"": SubResource("AnimationLibrary_dy06j")
 }
 
-[node name="Ball" type="TextureRect" parent="Animator"]
+[node name="Ball" type="TextureRect" parent="Scaler/Animator"]
 visible = false
 texture_filter = 2
 material = SubResource("CanvasItemMaterial_yn8gt")
@@ -873,7 +875,7 @@ script = ExtResource("8_q7srn")
 saturation = 0.25
 rainbow_speed = 1.0
 
-[node name="Character" type="AnimatedSprite2D" parent="Animator"]
+[node name="Character" type="AnimatedSprite2D" parent="Scaler/Animator"]
 material = ExtResource("12_yp81j")
 position = Vector2(0, -24)
 sprite_frames = SubResource("SpriteFrames_hq3og")
@@ -885,7 +887,7 @@ trail_divider = 8.0
 unglow_speed = 4.0
 glow_width = 10.0
 
-[node name="Trail" type="AnimatedSprite2D" parent="Animator/Character"]
+[node name="Trail" type="AnimatedSprite2D" parent="Scaler/Animator/Character"]
 visible = false
 show_behind_parent = true
 use_parent_material = true
@@ -893,7 +895,7 @@ sprite_frames = SubResource("SpriteFrames_hq3og")
 animation = &"idle"
 script = ExtResource("18_iaewr")
 
-[node name="LanternTarget" type="Node2D" parent="Animator"]
+[node name="LanternTarget" type="Node2D" parent="Scaler/Animator"]
 position = Vector2(-26, -32)
 script = ExtResource("11_yn8gt")
 
@@ -926,18 +928,18 @@ gravity_subtract = 0.3
 float_time = 0.4
 subsequent_damp = 1.5
 variable_jump_factor = 0.63
-sprite = NodePath("../../../Animator/Character")
+sprite = NodePath("../../../Scaler/Animator/Character")
 light = NodePath("../../../Lantern/Light")
 animation = "fall"
 metadata/_custom_type_script = "uid://ccbgj2r3ghy1f"
 
-[node name="Ball" type="Node" parent="PhysicsStates" node_paths=PackedStringArray("pop", "light", "sprite", "water_check", "shape_override")]
+[node name="Ball" type="Node" parent="PhysicsStates" node_paths=PackedStringArray("pop", "light", "sprite", "scaler", "water_check", "shape_override")]
 script = ExtResource("4_tgjim")
 min_bounce_vel = 200.0
 bounce_damp = 1.003
 base_launch_speed = 200.0
 launch_damp = 2.5
-max_shrink = 0.4
+max_shrink = 0.3
 scale_speed = 4.0
 pop = NodePath("../../Pop")
 pop_speed_target = 600.0
@@ -945,7 +947,8 @@ blur_strength = 3.0
 light = NodePath("../../Lantern/Light")
 direction_buffer = 0.07
 rot_speed = 12.0
-sprite = NodePath("../../Animator/Character")
+sprite = NodePath("../../Scaler/Animator/Character")
+scaler = NodePath("../../Scaler")
 max_fall = 850.0
 is_buoyant = true
 float_factor = 0.5
@@ -970,7 +973,7 @@ friction_decay = 0.5
 air_name = "Air"
 coyote_time = 0.15
 anim_target_speed = 300.0
-sprite = NodePath("../../Animator/Character")
+sprite = NodePath("../../Scaler/Animator/Character")
 animation = "idle"
 rotator = NodePath("../../Rotators/Ground")
 metadata/_custom_type_script = "uid://djxg21q4acmle"
@@ -1008,7 +1011,7 @@ friction_decay = 0.5
 air_name = "Air"
 coyote_time = 0.15
 anim_target_speed = 300.0
-sprite = NodePath("../../Animator/Character")
+sprite = NodePath("../../Scaler/Animator/Character")
 priority = 1
 allow_priority_override = true
 animation = "run"

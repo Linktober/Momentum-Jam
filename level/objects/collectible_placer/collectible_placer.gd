@@ -1,7 +1,9 @@
+class_name CollectiblePlacer
 extends Path2D
 
 
 @onready var path_follow_2d: PathFollow2D = $PathFollow2D
+@onready var collectibles: Node2D = $Collectibles
 
 @export var collectible_scene: PackedScene
 @export var collectible_count: int
@@ -14,10 +16,16 @@ func _ready() -> void:
 		place()
 
 
+func collected(_index: int) -> void:
+	pass
+
+
 func place() -> void:
 	for i: float in range(collectible_count):
 		path_follow_2d.progress_ratio = (i + 1) / collectible_count
 		
 		var collectible: Node2D = collectible_scene.instantiate()
-		collectible.global_position = path_follow_2d.global_position
-		add_child(collectible)
+		collectible.global_position = path_follow_2d.global_position - global_position
+		collectible.placed_index = 0
+		collectible.connect("collected", collected)
+		collectibles.add_child.call_deferred(collectible)

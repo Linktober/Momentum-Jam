@@ -38,6 +38,7 @@ func glow():
 func _process(delta: float) -> void:
 	material = materials[sprite_effect]
 	
+	modulate.a = 1.0
 	trail.visible = false
 	match sprite_effect:
 		SpriteEffect.Blur:
@@ -45,11 +46,6 @@ func _process(delta: float) -> void:
 			## framerate independance
 			var alpha: float = 1.0 - exp(-unblur_speed * delta)
 			cur_radius = lerp(cur_radius, 0.0, alpha)
-			if is_zero_approx(cur_radius):
-				sprite_effect = SpriteEffect.None
-				material = null
-			else:
-				material.set_shader_parameter("blur_radius", cur_radius)
 			
 			modulate.a = 1.0 - cur_radius / blur_strength / 2
 			trail.position = -Vector2(
@@ -59,6 +55,12 @@ func _process(delta: float) -> void:
 			trail.position = trail.position.rotated(-animator.rotation)
 			offset = -trail.position * 2
 			trail.visible = true
+			
+			if is_zero_approx(cur_radius):
+				sprite_effect = SpriteEffect.None
+				material = null
+			else:
+				material.set_shader_parameter("blur_radius", cur_radius)
 		
 		SpriteEffect.Glow:
 			if can_unglow:

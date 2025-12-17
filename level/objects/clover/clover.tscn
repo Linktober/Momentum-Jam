@@ -16,6 +16,8 @@ collision_layer = 0
 collision_mask = 4
 monitorable = false
 script = ExtResource("1_cejkl")
+active_color = Color(0.32156864, 0.32156864, 0.32156864, 1)
+inactive_color = Color(0.6392157, 0.6392157, 0.6392157, 0.7529412)
 
 [node name="ColorRect" type="ColorRect" parent="."]
 material = SubResource("ShaderMaterial_ec8w2")
@@ -26,6 +28,7 @@ offset_bottom = 16.0
 color = Color(0.32, 0.32, 0.32, 1)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
 shape = SubResource("CircleShape2D_gbniv")
 
 [connection signal="body_entered" from="." to="." method="body_entered"]

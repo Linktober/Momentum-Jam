@@ -22,6 +22,7 @@ var can_launch: bool
 @export var direction_buffer: float
 @export var rot_speed: float = 1
 @export var sprite: AnimatedSprite2D
+@export var scaler: Node2D
 var buffer_vector: Vector2
 
 var landed: bool
@@ -63,7 +64,7 @@ func _transition_check() -> String:
 ## runs once when this state begins being active
 func _on_enter() -> void:
 	landed = false
-	sprite_scale = Vector2.ONE
+	scaler.scale = Vector2.ONE
 	
 	calc_inputs()
 	sprite_rot = character.rotation
@@ -75,6 +76,8 @@ func _on_enter() -> void:
 
 ## runs once when this state stops being active
 func _on_exit() -> void:
+	light.strength_factor = 0.0
+	scaler.scale = Vector2.ONE
 	character.animator.rotation -= PI/2 * 1.0 if sprite.flip_v else -1.0
 
 
@@ -134,21 +137,21 @@ func _update(delta: float) -> void:
 			character.on_ground = false
 			
 			var total_shrink: float = max_shrink * (character.velocity.length() / max_fall)
-			sprite_scale = Vector2.ONE - (abs(normal.rotated(ball_direction.angle() + PI/2)) * total_shrink)
+			scaler.scale = Vector2.ONE - abs(normal) * total_shrink
 			
 			if abs(character.velocity.x) < min_bounce_vel and ball_direction.x != 0:
 				character.velocity.x = min_bounce_vel * ball_direction.x
 			if abs(character.velocity.y) < min_bounce_vel and ball_direction.y != 0:
 				character.velocity.y = min_bounce_vel * ball_direction.y
 			
-			var strength_factor: float = (launch_speed - base_launch_speed/2) / pop_speed_target / 1.5
+			var strength_factor: float = (launch_speed - base_launch_speed/2) / pop_speed_target
 			light.strength_factor = strength_factor
 			
 			break
 
 	## framerate independance
 	var scale_alpha: float = 1.0 - exp(-scale_speed * delta)
-	sprite_scale = lerp(sprite_scale, Vector2.ONE, scale_alpha)
+	scaler.scale = lerp(scaler.scale, Vector2.ONE, scale_alpha)
 
 	## run base function
 	super(delta)

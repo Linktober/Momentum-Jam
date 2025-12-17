@@ -1,14 +1,18 @@
+class_name Collectible
 extends Area2D
 
 
-var character: Character
-
 @export var magnet_speed: float
-var collected: bool
+
+var character: Character
+var is_collected: bool
+var placed_index: int
+
+signal collected(placed_index: int)
 
 
 func body_entered(body: Node2D) -> void:
-	if body is Character and not collected:
+	if body is Character and not is_collected:
 		character = body
 
 
@@ -28,5 +32,6 @@ func _physics_process(delta: float) -> void:
 func collect_body_entered(body: Node2D) -> void:
 	if body is Character:
 		queue_free()
-		collected = true
+		is_collected = true
+		emit_signal("collected", placed_index)
 		character = null

@@ -57,7 +57,7 @@ func _on_enter() -> void:
 ## runs once when this state stops being active
 func _on_exit() -> void:
 	sprite.can_unglow = true
-	light.strength_factor = 0
+	light.strength_factor = 0.0
 
 
 ## runs every frame while active
