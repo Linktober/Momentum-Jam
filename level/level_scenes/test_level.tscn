@@ -298,7 +298,5 @@ libraries = {
 &"": SubResource("AnimationLibrary_ksba8")
 }
 
-[connection signal="timeout" from="Objects/Rings/Timer" to="Objects/Rings" method="timeout"]
-
 [editable path="Objects/PetalPlacer"]
 [editable path="Objects/Rings"]
