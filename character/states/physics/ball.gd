@@ -2,7 +2,10 @@ class_name BallPhysics
 extends AirPhysics
 
 
+@onready var initial_launch_vol: float = launch_sound.volume_db
+@export var aim_sound: AudioStreamPlayer
 @export var bounce_sound: AudioStreamPlayer
+@export var launch_sound: AudioStreamPlayer
 @export var voice: AudioStreamPlayer
 @export var voice_threshold: float
 
@@ -55,6 +58,8 @@ func _transition_check() -> String:
 			pop.strength_factor = strength_factor
 			pop.pop(character.animator.global_position)
 			
+			launch_sound.volume_db = initial_launch_vol + strength_factor * 4
+			launch_sound.play()
 			light.strength_factor = 0.0
 			
 			character.velocity = ball_direction * launch_speed
@@ -73,6 +78,8 @@ func _on_enter() -> void:
 	if can_launch:
 		var strength_factor: float = (launch_speed - base_launch_speed/2) / pop_speed_target
 		light.strength_factor = strength_factor
+	
+	aim_sound.play()
 	
 	landed = false
 	scaler.scale = Vector2.ONE
