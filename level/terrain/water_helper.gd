@@ -7,12 +7,19 @@ extends Area2D
 @onready var overlay: Polygon2D = $Overlay
 @onready var edge: Line2D = $Edge
 
+@export_group("Splash")
 @export var resolution: int
 @export_range(0, 10) var smoothness: int = 2
 @export var tension: float
 @export var wave_damp: float
 @export var wave_spread: float
 @export var velocity_divide: float
+
+@export_group("Idle")
+@export var idle_amplitude: float
+@export var idle_period_1: float
+@export var idle_period_2: float
+@export var idle_speed: float
 
 var springs: Array
 var surface_indices: Array[int]
@@ -23,12 +30,12 @@ class Spring:
 	var height: float
 	var velocity: float
 
-	func update(tension: float, damp: float) -> void:
+	func update(delta: float, tension: float, damp: float) -> void:
 		var x: float = height - target_height
 		var loss: float = -damp * velocity
 		var force: float = -tension * x + loss
-		velocity += force
-		height += velocity
+		velocity += force * delta
+		height += velocity * delta
 
 
 func _ready() -> void:
@@ -92,7 +99,15 @@ func update_visuals() -> void:
 	var raw_points: PackedVector2Array = collision.polygon
 	
 	for i: int in range(springs.size()):
-		raw_points[i].y = springs[i].height
+		var sine_wave: float = sin(
+			float(i) * idle_period_1 + 
+			Time.get_unix_time_from_system() * idle_speed
+		) * idle_amplitude
+		var sine_wave_2: float = sin(
+			float(i) * idle_period_2 + 
+			Time.get_unix_time_from_system() * idle_speed
+		) * idle_amplitude
+		raw_points[i].y = springs[i].height + sine_wave * sine_wave_2
 	
 	var smooth_points = raw_points
 	for _pass: int in range(smoothness):
@@ -124,12 +139,16 @@ func splash(index: int, speed: float) -> void:
 		springs[index].velocity = speed
 
 
-func _physics_process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	if Engine.is_editor_hint(): return
 	
 	for i: int in surface_indices:
-		springs[i].update(tension, wave_damp)
-
+		springs[i].update(delta, tension, wave_damp)
+	
+	var velocity_changes: Array[float]
+	velocity_changes.resize(springs.size())
+	velocity_changes.fill(0.0)
+	
 	for i: int in range(surface_indices.size()):
 		var current_index = surface_indices[i]
 		if i > 0:
@@ -138,14 +157,17 @@ func _physics_process(_delta: float) -> void:
 				springs[current_index].height - 
 				springs[prev_index].height
 			)
-			springs[prev_index].velocity += diff
+			velocity_changes[prev_index] += diff * delta
 		if i < surface_indices.size() - 1:
 			var next_index: int = surface_indices[i+1]
 			var diff: float = wave_spread * (
 				springs[current_index].height - 
 				springs[next_index].height
 			)
-			springs[next_index].velocity += diff
+			velocity_changes[next_index] += diff * delta
+	
+	for i: int in surface_indices:
+		springs[i].velocity += velocity_changes[i]
 	
 	update_visuals()
 
