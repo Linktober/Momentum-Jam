@@ -7,13 +7,15 @@ extends Area2D
 @onready var overlay: Polygon2D = $Overlay
 @onready var edge: Line2D = $Edge
 
-@export var resolution: int = 20
-@export var target_height: float = 0.0
-@export var tension: float = 0.015
-@export var wave_damp: float = 0.05
-@export var wave_spread: float = 0.2
+@export var resolution: int
+@export_range(0, 10) var smoothness: int = 2
+@export var tension: float
+@export var wave_damp: float
+@export var wave_spread: float
+@export var velocity_divide: float
 
-@export var springs: Array
+var springs: Array
+var surface_indices: Array[int]
 
 
 class Spring:
@@ -29,24 +31,139 @@ class Spring:
 		height += velocity
 
 
-func decorate_water() -> void:
-	inner.polygon = collision.polygon
-	overlay.polygon = collision.polygon
-	edge.points = collision.polygon
+func _ready() -> void:
+	subdivide_surface()
+	initialize_springs()
 
 
-#func splash(index: int, speed: float) -> void:
-	#if index > 0 and index < springs.size():
-		#springs[index].velocity = speed
+func subdivide_surface() -> void:
+	var old_poly: PackedVector2Array = collision.polygon
+	var new_poly: PackedVector2Array = []
+	
+	for i in range(old_poly.size()):
+		var p1 = old_poly[i]
+		var p2 = old_poly[(i + 1) % old_poly.size()]
+		new_poly.append(p1)
+		
+		var normal: Vector2 = get_segment_normal(p1, p2)
+		if normal.y < -0.7:
+			var dist = p1.distance_to(p2)
+			if dist > resolution:
+				var segments = int(dist / resolution)
+				for j in range(1, segments):
+					new_poly.append(p1.lerp(p2, float(j) / segments))
+	
+	collision.polygon = new_poly
+	decorate_water(new_poly)
 
 
-#func _physics_process(_delta: float) -> void:
-	#if Engine.is_editor_hint(): return
-	#for spring: Spring in springs:
-		#spring.update(tension, wave_damp)
+func initialize_springs() -> void:
+	springs.clear()
+	surface_indices.clear()
+
+	for i in range(collision.polygon.size()):
+		var spring = Spring.new()
+		spring.target_height = collision.polygon[i].y
+		spring.height = spring.target_height
+		spring.velocity = 0
+		springs.append(spring)
+
+		if is_vertex_on_surface(i, collision.polygon):
+			surface_indices.append(i)
 
 
-#func body_entered(body: Node2D) -> void:
-	#var relative_x: float = body.global_position.x - global_position.x
-	#var index := int(relative_x / resolution)
-	#splash(index, body.velocity.y / 10)
+func is_vertex_on_surface(index: int, polygon: PackedVector2Array) -> bool:
+	var p = polygon[index]
+	var prev = polygon[index - 1 if index > 0 else polygon.size() - 1]
+	var next = polygon[(index + 1) % polygon.size()]
+
+	var n1 = get_segment_normal(prev, p)
+	var n2 = get_segment_normal(p, next)
+
+	return n1.y < -0.5 or n2.y < -0.5
+
+
+func get_segment_normal(p1: Vector2, p2: Vector2) -> Vector2:
+	var segment: Vector2 = p2 - p1
+	return Vector2(-segment.y, segment.x).normalized()
+
+
+func update_visuals() -> void:
+	var raw_points: PackedVector2Array = collision.polygon
+	
+	for i: int in range(springs.size()):
+		raw_points[i].y = springs[i].height
+	
+	var smooth_points = raw_points
+	for _pass: int in range(smoothness):
+		var temporary_points = smooth_points
+		for i: int in range(surface_indices.size()):
+			var current_idx = surface_indices[i]
+			
+			var prev_idx = surface_indices[i - 1] if i > 0 else current_idx
+			var next_idx = surface_indices[i + 1] if i < surface_indices.size() - 1 else current_idx
+			
+			temporary_points[current_idx].y = (
+				smooth_points[prev_idx].y + 
+				smooth_points[current_idx].y + 
+				smooth_points[next_idx].y
+			) / 3.0
+		smooth_points = temporary_points
+	
+	decorate_water(smooth_points)
+
+
+func decorate_water(polygon: PackedVector2Array = collision.polygon) -> void:
+	inner.polygon = polygon
+	overlay.polygon = polygon
+	edge.points = polygon
+
+
+func splash(index: int, speed: float) -> void:
+	if index > 0 and index < springs.size():
+		springs[index].velocity = speed
+
+
+func _physics_process(_delta: float) -> void:
+	if Engine.is_editor_hint(): return
+	
+	for i: int in surface_indices:
+		springs[i].update(tension, wave_damp)
+
+	for i: int in range(surface_indices.size()):
+		var current_index = surface_indices[i]
+		if i > 0:
+			var prev_index: int = surface_indices[i-1]
+			var diff: float = wave_spread * (
+				springs[current_index].height - 
+				springs[prev_index].height
+			)
+			springs[prev_index].velocity += diff
+		if i < surface_indices.size() - 1:
+			var next_index: int = surface_indices[i+1]
+			var diff: float = wave_spread * (
+				springs[current_index].height - 
+				springs[next_index].height
+			)
+			springs[next_index].velocity += diff
+	
+	update_visuals()
+
+
+func handle_body(body: Node2D, splash_factor: float = 1.0) -> void:
+	if not "velocity" in body: return
+	
+	var local_pos: Vector2 = to_local(body.global_position)
+	var closest_index: int = -1
+	var min_dist: float = INF
+	
+	for i in surface_indices:
+		var dist = abs(collision.polygon[i].x - local_pos.x)
+		if dist < min_dist:
+			min_dist = dist
+			closest_index = i
+			
+	if closest_index != -1:
+		var vertical_dist = abs(local_pos.y - springs[closest_index].height)
+		if vertical_dist < 250:
+			splash(closest_index, body.velocity.y * splash_factor / velocity_divide)
