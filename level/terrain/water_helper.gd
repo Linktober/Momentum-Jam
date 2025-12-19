@@ -56,6 +56,7 @@ func get_polygon_rect(polygon: PackedVector2Array) -> Rect2:
 
 
 func _ready() -> void:
+	if Engine.is_editor_hint(): return
 	subdivide_surface()
 	initialize_springs()
 	await get_tree().physics_frame
