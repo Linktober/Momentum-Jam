@@ -49,6 +49,6 @@ func _update(delta: float) -> void:
 		
 		character.velocity.x = move_toward(character.velocity.x, 0, x_correct_speed * delta)
 		stop_timer -= delta
-		animation = "idle"
+		animation = "collect"
 	
 	super(delta)

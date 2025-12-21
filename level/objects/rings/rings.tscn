@@ -1,35 +1,190 @@
-[gd_scene load_steps=5 format=3 uid="uid://caqbx734ke4b3"]
+[gd_scene load_steps=24 format=3 uid="uid://caqbx734ke4b3"]
 
 [ext_resource type="Script" uid="uid://dg3jcyvxhve25" path="res://level/objects/rings/rings.gd" id="2_lrv7a"]
-[ext_resource type="Shader" uid="uid://bj0q8wafpmjw5" path="res://shaders/clover.gdshader" id="2_tsk7x"]
+[ext_resource type="Shader" uid="uid://ddhyva1f54fwn" path="res://shaders/ring.gdshader" id="3_ixs6w"]
+[ext_resource type="AudioStream" uid="uid://748jeq7tqqj5" path="res://level/objects/petal_placer/tick.mp3" id="3_qcxay"]
+[ext_resource type="AudioStream" uid="uid://b81kaej86pls0" path="res://level/objects/petal/collect0.mp3" id="4_ixs6w"]
+[ext_resource type="AudioStream" uid="uid://1brhpmfjvuvs" path="res://level/objects/petal/collect1.mp3" id="5_ul4ox"]
+[ext_resource type="AudioStream" uid="uid://b2d12m7eoq6si" path="res://level/objects/petal/collect2.mp3" id="6_fqubr"]
+[ext_resource type="AudioStream" uid="uid://jiu5fijhhwmn" path="res://level/objects/petal/collect3.mp3" id="7_m7rbc"]
+[ext_resource type="AudioStream" uid="uid://ddyj5xitp8ajj" path="res://level/objects/petal/collectlast.mp3" id="8_l7tck"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_4ux1n"]
-shader = ExtResource("2_tsk7x")
-shader_parameter/global_pos = Vector2(0, 0)
-shader_parameter/influence = 0.5
-shader_parameter/offset = 0.0
-shader_parameter/effect_scale = 4.0
-shader_parameter/effect_divide = 1.0
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_qcxay"]
+blend_mode = 1
+
+[sub_resource type="Gradient" id="Gradient_ul4ox"]
+offsets = PackedFloat32Array(0.5, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+metadata/_snap_enabled = true
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_fqubr"]
+gradient = SubResource("Gradient_ul4ox")
+width = 32
+height = 32
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.5, 0)
+metadata/_snap_enabled = true
+
+[sub_resource type="Gradient" id="Gradient_m7rbc"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="Gradient" id="Gradient_l7tck"]
+offsets = PackedFloat32Array(0, 0.2, 0.4, 0.6, 0.8, 1)
+colors = PackedColorArray(1, 0.19999999, 0.19999999, 1, 1, 1, 0.19999999, 1, 0.19999999, 1, 0.19999999, 1, 0.19999999, 1, 1, 1, 0.19999999, 0.19999999, 1, 1, 1, 0.19999999, 1, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ul4ox"]
+shader = ExtResource("3_ixs6w")
+shader_parameter/speed = 0.5
+
+[sub_resource type="Gradient" id="Gradient_tsk7x"]
+offsets = PackedFloat32Array(0.5, 0.73333335, 0.9, 0.93333334, 0.96666664, 1)
+colors = PackedColorArray(1, 1, 1, 0.1254902, 0.5, 0.5, 0.5, 1, 1, 1, 1, 1, 1, 1, 1, 0.7529412, 1, 1, 1, 0.5019608, 1, 1, 1, 0)
+metadata/_snap_enabled = true
+metadata/_snap_count = 30
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_e7n8h"]
+gradient = SubResource("Gradient_tsk7x")
+width = 256
+height = 256
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.5, 0)
+metadata/_snap_enabled = true
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_4jrmn"]
-radius = 48.0
+radius = 64.0
+
+[sub_resource type="Animation" id="Animation_ul4ox"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CanvasGroup/TextureRect:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(0, 0, 3.2944162, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("CanvasGroup/TextureRect:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1, 1)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("CanvasGroup/TextureRect:texture:gradient:offsets")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [PackedFloat32Array(0.5, 0.73333335, 0.9, 0.93333334, 0.96666664, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_ixs6w"]
+resource_name = "fade"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CanvasGroup/TextureRect:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(0.5, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(0, 0, 3.2944162, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("CanvasGroup/TextureRect:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(0.5, 1),
+"update": 0,
+"values": [Vector2(1, 1), Vector2(1.75, 1.75)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("CanvasGroup/TextureRect:texture:gradient:offsets")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [PackedFloat32Array(0, 0.5, 0.73333335, 0.9, 0.93333334, 0.96666664, 1), PackedFloat32Array(0, 0.9, 0.93333334, 0.95, 0.96666664, 0.98333335, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_fqubr"]
+_data = {
+&"RESET": SubResource("Animation_ul4ox"),
+&"fade": SubResource("Animation_ixs6w")
+}
+
+[sub_resource type="Gradient" id="Gradient_ixs6w"]
+offsets = PackedFloat32Array(0.5, 0.73333335, 0.9, 0.93333334, 0.96666664, 1, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0.1254902, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0.7529412, 1, 1, 1, 0.5019608, 0, 0, 0, 0)
+metadata/_snap_enabled = true
+metadata/_snap_count = 60
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_l7tck"]
+gradient = SubResource("Gradient_ixs6w")
+width = 256
+height = 256
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.5, 0)
+metadata/_snap_enabled = true
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_c2w2q"]
+random_volume_offset_db = 0.5
+streams_count = 4
+stream_0/stream = ExtResource("4_ixs6w")
+stream_1/stream = ExtResource("5_ul4ox")
+stream_2/stream = ExtResource("6_fqubr")
+stream_3/stream = ExtResource("7_m7rbc")
 
 [node name="Rings" type="Path2D"]
-z_index = 1
 script = ExtResource("2_lrv7a")
 particle_time = 0.5
+hover_time = 0.3
+min_tick_delay = 0.025
+max_tick_delay = 0.25
+speedup_threshold = 2.0
 
 [node name="PathFollow2D" type="PathFollow2D" parent="."]
 rotation = 3.1415927
 rotates = false
 
 [node name="CPUParticles2D" type="CPUParticles2D" parent="PathFollow2D"]
-material = SubResource("ShaderMaterial_4ux1n")
+texture_filter = 2
+material = SubResource("CanvasItemMaterial_qcxay")
 emitting = false
 amount = 32
+texture = SubResource("GradientTexture2D_fqubr")
 gravity = Vector2(0, 0)
-scale_amount_min = 6.0
-scale_amount_max = 6.0
+scale_amount_min = 0.25
+scale_amount_max = 0.25
+color_ramp = SubResource("Gradient_m7rbc")
+color_initial_ramp = SubResource("Gradient_l7tck")
 
 [node name="Collectibles" type="Node2D" parent="."]
 
@@ -38,15 +193,59 @@ collision_layer = 0
 collision_mask = 4
 monitorable = false
 
-[node name="ColorRect" type="ColorRect" parent="Ring"]
-material = SubResource("ShaderMaterial_4ux1n")
-offset_left = -2.0
+[node name="CanvasGroup" type="CanvasGroup" parent="Ring"]
+texture_filter = 2
+material = SubResource("ShaderMaterial_ul4ox")
+
+[node name="TextureRect" type="TextureRect" parent="Ring/CanvasGroup"]
+texture_filter = 2
+offset_left = -20.0
 offset_top = -48.0
-offset_right = 2.0
+offset_right = 20.0
 offset_bottom = 48.0
+texture = SubResource("GradientTexture2D_e7n8h")
+expand_mode = 1
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Ring"]
+visible = false
 shape = SubResource("CircleShape2D_4jrmn")
+
+[node name="TickSound" type="AudioStreamPlayer2D" parent="Ring"]
+stream = ExtResource("3_qcxay")
+volume_db = 3.0
+bus = &"Sounds"
+
+[node name="RingLast" type="Node2D" parent="."]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="RingLast"]
+libraries = {
+&"": SubResource("AnimationLibrary_fqubr")
+}
+
+[node name="CanvasGroup" type="CanvasGroup" parent="RingLast"]
+texture_filter = 2
+material = SubResource("ShaderMaterial_ul4ox")
+
+[node name="TextureRect" type="TextureRect" parent="RingLast/CanvasGroup"]
+modulate = Color(0, 0, 3.2944162, 0)
+texture_filter = 2
+offset_left = -20.0
+offset_top = -48.0
+offset_right = 20.0
+offset_bottom = 48.0
+pivot_offset = Vector2(20, 48)
+texture = SubResource("GradientTexture2D_l7tck")
+expand_mode = 1
+
+[node name="Sound" type="AudioStreamPlayer2D" parent="RingLast"]
+stream = SubResource("AudioStreamRandomizer_c2w2q")
+volume_db = 10.0
+bus = &"Sounds"
+
+[node name="SoundLast" type="AudioStreamPlayer2D" parent="RingLast"]
+stream = ExtResource("8_l7tck")
+volume_db = 8.0
+bus = &"Sounds"
 
 [node name="Timer" type="Timer" parent="."]
 wait_time = 3.0

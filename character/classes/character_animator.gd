@@ -20,6 +20,7 @@ func _update(delta: float) -> void:
 	var do_flip_scale: bool = true
 	var animator: Animator
 	var rotator: Rotator
+	var restart_anim: bool
 	
 	if is_instance_valid(character.action):
 		new_anim = character.action.animation
@@ -30,6 +31,8 @@ func _update(delta: float) -> void:
 		do_flip_scale = character.action.do_flip_scale
 		animator = character.action.animator
 		rotator = character.action.rotator
+		restart_anim = character.action.restart_anim
+		character.action.restart_anim = false
 	
 	if is_instance_valid(character.physics):
 		if new_anim == "":
@@ -41,6 +44,9 @@ func _update(delta: float) -> void:
 		sprite_scale *= character.physics.sprite_scale
 		if not is_instance_valid(character.action):
 			do_flip_scale = character.physics.do_flip_scale
+			restart_anim = character.physics.restart_anim
+			character.physics.restart_anim = false
+			
 		if not is_instance_valid(animator):
 			animator = character.physics.animator
 		if not is_instance_valid(rotator):
@@ -66,7 +72,7 @@ func _update(delta: float) -> void:
 			reset_physics_interpolation()
 			for child in get_children():
 				child.reset_physics_interpolation()
-	elif cur_anim != new_anim:
+	elif cur_anim != new_anim or restart_anim:
 		cur_anim = new_anim
 		animation_player.play("RESET")
 		animation_player.advance(0)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://47d5qr13mh7m"]
+[gd_scene load_steps=22 format=3 uid="uid://47d5qr13mh7m"]
 
 [ext_resource type="Script" uid="uid://m1absxshqc7e" path="res://level/objects/petal/petal.gd" id="1_ocx8v"]
 [ext_resource type="Texture2D" uid="uid://wk8fryv4ja1" path="res://level/objects/petal/petal1.png" id="2_5oyd3"]
@@ -7,7 +7,6 @@
 [ext_resource type="Texture2D" uid="uid://c78w3m7a6nakk" path="res://level/objects/petal/petal4.png" id="5_tkjwy"]
 [ext_resource type="Texture2D" uid="uid://cc247d1ndd46i" path="res://level/objects/petal/petal5.png" id="6_m1kgc"]
 [ext_resource type="Texture2D" uid="uid://b4salrytdocpu" path="res://level/objects/petal/petal6.png" id="7_w2r8j"]
-[ext_resource type="Shader" uid="uid://btuc7wsl22b2x" path="res://shaders/blur.gdshader" id="8_vnk2h"]
 [ext_resource type="Shader" uid="uid://bj0q8wafpmjw5" path="res://shaders/clover.gdshader" id="10_23amy"]
 
 [sub_resource type="Animation" id="Animation_84e4l"]
@@ -176,11 +175,21 @@ _data = {
 [sub_resource type="ViewportTexture" id="ViewportTexture_2orgk"]
 viewport_path = NodePath("SubViewport")
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_37uq6"]
-shader = ExtResource("8_vnk2h")
-shader_parameter/is_additive = true
-shader_parameter/blur_radius = 5.0000002375
-shader_parameter/sample_count = 7
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_ie2yl"]
+blend_mode = 1
+
+[sub_resource type="Gradient" id="Gradient_5oyd3"]
+colors = PackedColorArray(1, 1, 1, 0.1882353, 1, 1, 1, 0)
+metadata/_snap_enabled = true
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_nqdlf"]
+gradient = SubResource("Gradient_5oyd3")
+width = 22
+height = 24
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.5, 0)
+metadata/_snap_enabled = true
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_r3g2v"]
 radius = 48.0
@@ -217,13 +226,14 @@ libraries = {
 texture = SubResource("ViewportTexture_2orgk")
 
 [node name="Glow" type="Sprite2D" parent="Viewport"]
-modulate = Color(1.8247963, 1.8247963, 1.8247963, 0.5019608)
 show_behind_parent = true
 texture_filter = 2
-material = SubResource("ShaderMaterial_37uq6")
-texture = SubResource("ViewportTexture_2orgk")
+material = SubResource("CanvasItemMaterial_ie2yl")
+position = Vector2(0, -1)
+texture = SubResource("GradientTexture2D_nqdlf")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
 shape = SubResource("CircleShape2D_r3g2v")
 
 [node name="Collect" type="Area2D" parent="."]
@@ -232,6 +242,7 @@ collision_mask = 4
 monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Collect"]
+visible = false
 shape = SubResource("CircleShape2D_4r5sp")
 
 [node name="SubViewport" type="SubViewport" parent="."]

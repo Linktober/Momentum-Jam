@@ -6,6 +6,8 @@ extends ActionState
 @export var perfect_swim_power: float
 @export var swim_speed: float
 @export var perfect_swim_speed: float
+@export var swim_cap: float
+@export var perfect_swim_cap: float
 
 @export var swim_delay: float
 @export var swim_time: float
@@ -48,6 +50,8 @@ func _transition_check() -> String:
 
 ## runs once when this state begins being active
 func _on_enter() -> void:
+	restart_anim = true
+	
 	start_unglow = sprite.unglow_speed
 	if do_perfect_swim:
 		swim_perfect_sound.play()
@@ -85,7 +89,28 @@ func _update(delta: float) -> void:
 			if character.input["right"][0]: swim_dir.x += 1
 			if character.input["up"][0]: swim_dir.y -= 1
 			if character.input["down"][0]: swim_dir.y += 1
-			character.velocity += (perfect_swim_power if perfect_swimming else swim_power) * swim_dir
+			
+			var power: float = perfect_swim_power if perfect_swimming else swim_power
+			var add_vector: Vector2 = power * swim_dir
+			
+			## convoluted but basically dont add velocity if going too fast
+			add_vector.x = ((
+				min(
+					abs(
+						character.velocity.x + power * swim_dir.x
+					),
+					perfect_swim_cap if perfect_swimming else swim_cap)
+				) - abs(character.velocity.x)) * swim_dir.x
+			add_vector.y = ((
+				min(
+					abs(
+						character.velocity.y + power * swim_dir.y
+					),
+					perfect_swim_cap if perfect_swimming else swim_cap)
+				) - abs(character.velocity.y)) * swim_dir.y
+			
+			character.velocity += add_vector
+			
 		return
 	
 	var speed: float = perfect_swim_speed if perfect_swimming else swim_speed

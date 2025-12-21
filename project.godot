@@ -38,6 +38,7 @@ enabled=PackedStringArray("res://addons/parallax2d_preview/plugin.cfg")
 
 folder_colors={
 "res://character/": "teal",
+"res://fonts/": "gray",
 "res://global/": "yellow",
 "res://level/": "blue",
 "res://music/": "pink",

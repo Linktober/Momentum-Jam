@@ -65,16 +65,18 @@ func _process(delta: float) -> void:
 		glow.position.y = clock.offset.y - (glow.size.y/2)
 		return
 	
+	var remaining_scale: float = timer.time_left / speedup_threshold
+	
 	next_tick_counter -= delta
 	if next_tick_counter <= 0:
 		tick_sound.play()
 		next_tick_counter = max_tick_delay
 		if timer.time_left < speedup_threshold:
-			var remaining_scale: float = timer.time_left / speedup_threshold
 			next_tick_counter = remaining_scale * max_tick_delay
 			next_tick_counter = max(next_tick_counter, min_tick_delay)
-			
-			collectibles.modulate.a = min(remaining_scale * 2, 1.0) 
+	
+	if timer.time_left < speedup_threshold:
+		collectibles.modulate.a = min(remaining_scale * 2, 1.0) 
 	
 	tick_sound.global_position = character.global_position.clamp(
 		collectibles_rect.position + global_position, 

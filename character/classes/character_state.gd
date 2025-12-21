@@ -21,6 +21,7 @@ extends Node
 @export var do_flip_scale: bool = true
 @export var animator: Animator
 @export var rotator: Rotator
+var restart_anim: bool = true
 
 @export_group("Collision")
 @export var snap_override: int = -1 ## floor snapping
